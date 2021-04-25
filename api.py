@@ -1,6 +1,3 @@
-# coding: utf-8
-# Импортирует поддержку UTF-8.
-from __future__ import unicode_literals
 from flask import Flask, request
 import logging
 import json
@@ -19,19 +16,27 @@ cities = {
 sessionStorage = {}
 
 
-@app.route('/post', methods=['POST'])
 def main():
+# Функция получает тело запроса и возвращает ответ.
     logging.info('Request: %r', request.json)
+
     response = {
-        'session': request.json['session'],
-        'version': request.json['version'],
-        'response': {
-            'end_session': False
+        "version": request.json['version'],
+        "session": request.json['session'],
+        "response": {
+            "end_session": False
         }
     }
-    handle_dialog(response, request.json)
+
+    handle_dialog(request.json, response)
+
     logging.info('Response: %r', response)
-    return json.dumps(response)
+
+    return json.dumps(
+        response,
+        ensure_ascii=False,
+        indent=2
+    )
 
 
 def handle_dialog(res, req):
@@ -173,3 +178,7 @@ def get_first_name(req):
             # Если есть сущность с ключом 'first_name', то возвращаем её значение.
             # Во всех остальных случаях возвращаем None.
             return entity['value'].get('first_name', None)
+
+
+if __name__ == '__main__':
+    app.run()
