@@ -107,7 +107,16 @@ def handle_dialog(res, req):
                 res['end_session'] = True
             else:
                 res['response']['text'] = 'Не поняла ответа! Так да или нет?'
-                res['response']['buttons'] = get_suggests(user_id, ['Да', 'Нет'])
+                res['response']['buttons'] = [
+                    {
+                        'title': 'Да',
+                        'hide': True
+                    },
+                    {
+                        'title': 'Нет',
+                        'hide': True
+                    }
+                ]
         else:
             play_game(res, req)
 
@@ -139,7 +148,12 @@ def play_game(res, req):
             # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
             res['response']['text'] = 'Правильно! Сыграем ещё?'
             sessionStorage[user_id]['guessed_cities'].append(city)
-            res['response']['buttons'] = get_suggests(user_id, ['Да'])
+            res['response']['buttons'] = [
+                {
+                    'title': 'Да',
+                    'hide': True
+                }
+            ]
             sessionStorage[user_id]['game_started'] = False
             return
         else:
@@ -150,7 +164,6 @@ def play_game(res, req):
                 # добавляем город к sessionStorage[user_id]['guessed_cities'] и отправляем его на второй круг.
                 # Обратите внимание на этот шаг на схеме.
                 res['response']['text'] = f'Вы пытались. Это {city.title()}. Сыграем ещё?'
-                res['response']['buttons'] = get_suggests(user_id, ['Да'])
                 sessionStorage[user_id]['game_started'] = False
                 sessionStorage[user_id]['guessed_cities'].append(city)
                 return
