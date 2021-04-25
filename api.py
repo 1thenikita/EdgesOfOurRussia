@@ -135,7 +135,7 @@ def play_game(res, req):
         # добавляем в ответ картинку
         res['response']['card'] = {}
         res['response']['card']['type'] = 'BigImage'
-        res['response']['card']['title'] = cities[city][attempt - 2]
+        res['response']['card']['title'] = cities[city][attempt - 1]
         res['response']['card']['image_id'] = cities[city][attempt]
         res['response']['text'] = 'Тогда сыграем!'
         res['response']['buttons'] = get_suggests(user_id, cities[city][attempt + 1])
@@ -214,3 +214,6 @@ def get_suggests(user_id, _suggest):
 
     # Возвращаем подсказки
     return suggests
+
+if __name__ == '__main__':
+    app.run()
