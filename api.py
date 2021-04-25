@@ -57,26 +57,42 @@ def handle_dialog(req, res):
             ]
         }
 
-        res['response']['text'] = 'Привет! Купи слона!'
-        res['response']['buttons'] = get_suggests(user_id)
+        res['response']['text'] = 'Привет путешественник! Хочешь ли ты изучить край нашей необъятной страны России?'
+        # res['response']['buttons'] = get_suggests(user_id)
         return
 
     # Обрабатываем ответ пользователя.
     if req['request']['original_utterance'].lower() in [
-        'ладно',
-        'куплю',
-        'покупаю',
-        'хорошо',
+        'да',
+        'хочу'
     ]:
         # Пользователь согласился, прощаемся.
-        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        res['response']['text'] = 'Ну, тогда давай знакомиться. Как тебя зовут?'
         return
 
-    # Если нет, то убеждаем его купить слона!
-    res['response']['text'] = 'Все говорят "%s", а ты купи слона!' % (
-        req['request']['original_utterance']
-    )
-    res['response']['buttons'] = get_suggests(user_id)
+    # Обрабатываем ответ пользователя.
+    if req['request']['original_utterance'].lower() in [
+        'Никита'
+    ]:
+        # Пользователь согласился, прощаемся.
+        res['response']['text'] = 'Очень приятно! Ну что, начнём нашу путешествие?'
+        return
+
+    # Обрабатываем ответ пользователя.
+    if req['request']['original_utterance'].lower() in [
+        'да',
+        'конечно'
+    ]:
+        # Пользователь согласился, прощаемся.
+        res['response']['text'] = 'Первый вопрос. Знаменитые Ленские столбы возвышаются грозными утёсами на берегу одной из крупных рек Якутии. На какой реке они стоят?'
+        return
+
+
+    # # Если нет, то убеждаем его купить слона!
+    # res['response']['text'] = 'Все говорят "%s", а ты купи слона!' % (
+    #     req['request']['original_utterance']
+    # )
+    # res['response']['buttons'] = get_suggests(user_id)
 
 # Функция возвращает две подсказки для ответа.
 def get_suggests(user_id):
