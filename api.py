@@ -72,7 +72,7 @@ def handle_dialog(req, res):
 
     # Обрабатываем ответ пользователя.
     if req['request']['original_utterance'].lower() in [
-        'Никита'
+        'никита'
     ]:
         # Пользователь согласился, прощаемся.
         res['response']['text'] = 'Очень приятно! Ну что, начнём нашу путешествие?'
@@ -85,6 +85,16 @@ def handle_dialog(req, res):
     ]:
         # Пользователь согласился, прощаемся.
         res['response']['text'] = 'Первый вопрос. Знаменитые Ленские столбы возвышаются грозными утёсами на берегу одной из крупных рек Якутии. На какой реке они стоят?'
+        res['response']['buttons'] = get_suggests(user_id, ['Индигирка', 'Лена', 'Калыма', 'Оленек'])
+        return
+
+    # Обрабатываем ответ пользователя.
+    if req['request']['original_utterance'].lower() in [
+        'лена'
+    ]:
+        # Пользователь согласился, прощаемся.
+        res['response']['text'] = 'Это правильный ответ! Поздравляю! Перейдём к следующему вопросу. Форма этого памятника в виде трехгранного штыка. В каком городе он находится?'
+        res['response']['buttons'] = get_suggests(user_id, ['Мурманск', 'Санкт-Петербург', 'Волгоград', 'Москва'])
         return
 
 
@@ -94,27 +104,46 @@ def handle_dialog(req, res):
     # )
     # res['response']['buttons'] = get_suggests(user_id)
 
-# Функция возвращает две подсказки для ответа.
-def get_suggests(user_id):
+# # Функция возвращает две подсказки для ответа.
+# def get_suggests(user_id):
+#     session = sessionStorage[user_id]
+#
+#     # Выбираем две первые подсказки из массива.
+#     suggests = [
+#         {'title': suggest, 'hide': True}
+#         for suggest in session['suggests'][:2]
+#     ]
+#
+#     # Убираем первую подсказку, чтобы подсказки менялись каждый раз.
+#     session['suggests'] = session['suggests'][1:]
+#     sessionStorage[user_id] = session
+#
+#     # Если осталась только одна подсказка, предлагаем подсказку
+#     # со ссылкой на Яндекс.Маркет.
+#     if len(suggests) < 2:
+#         suggests.append({
+#             "title": "Ладно",
+#             "url": "https://market.yandex.ru/search?text=слон",
+#             "hide": True
+#         })
+#
+#     return suggests
+
+
+# Функция возвращает подсказки для ответа.
+def get_suggests(user_id, _suggest):
+    # Открываем сессию пользователя
     session = sessionStorage[user_id]
 
-    # Выбираем две первые подсказки из массива.
-    suggests = [
-        {'title': suggest, 'hide': True}
-        for suggest in session['suggests'][:2]
-    ]
+    # Обнуляем массив с подсказками.
+    suggests = []
 
-    # Убираем первую подсказку, чтобы подсказки менялись каждый раз.
-    session['suggests'] = session['suggests'][1:]
-    sessionStorage[user_id] = session
-
-    # Если осталась только одна подсказка, предлагаем подсказку
-    # со ссылкой на Яндекс.Маркет.
-    if len(suggests) < 2:
+    # Через цикл добавляем подсказки в массив
+    for i in range(len(_suggest)):
         suggests.append({
-            "title": "Ладно",
-            "url": "https://market.yandex.ru/search?text=слон",
+            "title": _suggest[i],
             "hide": True
         })
 
+    # Возвращаем подсказки
     return suggests
