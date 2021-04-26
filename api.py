@@ -21,6 +21,7 @@ cities = {
     'камчатка': ['Сможете угадать, где находятся эти древние деревянные фигуры?', '937455/b8609e98c38dbc567fb1', ['Камчатка', 'Байкал', 'Урал']]
 }
 
+# Инициализируем хранилище.
 sessionStorage = {}
 
 
@@ -48,7 +49,7 @@ def main():
         indent=2
     )
 
-
+# Главная ветка кода.
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
     if req['session']['new']:
@@ -91,7 +92,7 @@ def handle_dialog(res, req):
             if 'да' in req['request']['nlu']['tokens']:
                 # если пользователь согласен, то проверяем не отгадал ли он уже все города.
                 # По схеме можно увидеть, что здесь окажутся и пользователи, которые уже отгадывали города
-                if len(sessionStorage[user_id]['guessed_cities']) == 12:
+                if len(sessionStorage[user_id]['guessed_cities']) == 11:
                     # если все три города отгаданы, то заканчиваем игру
                     res['response']['text'] = 'Ты отгадал все города!'
                     res['end_session'] = True
@@ -121,6 +122,7 @@ def handle_dialog(res, req):
             play_game(res, req)
 
 
+# Функция запуска игры.
 def play_game(res, req):
     user_id = req['session']['user_id']
     attempt = sessionStorage[user_id]['attempt']
@@ -179,6 +181,7 @@ def play_game(res, req):
     sessionStorage[user_id]['attempt'] += 1
 
 
+# Функция возвращает город для ответа.
 def get_city(req):
     # перебираем именованные сущности
     for entity in req['request']['nlu']['entities']:
@@ -188,6 +191,7 @@ def get_city(req):
             return entity['value'].get('city', None)
 
 
+# Функция возвращает имя пользователя для ответа.
 def get_first_name(req):
     # перебираем сущности
     for entity in req['request']['nlu']['entities']:
@@ -216,5 +220,7 @@ def get_suggests(user_id, _suggest):
     # Возвращаем подсказки
     return suggests
 
-if __name__ == '__main__':
-    app.run()
+
+# Запуск для дебага.
+# if __name__ == '__main__':
+#     app.run()
