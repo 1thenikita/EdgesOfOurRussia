@@ -3,9 +3,20 @@ import logging
 import json
 import random
 
+
+
+
+
 app = Flask(__name__)
 
+
+
+
+
 logging.basicConfig(level=logging.INFO)
+
+
+
 
 cities = {
     'лена': ['Знаменитые Ленские столбы возвышаются грозными утёсами на берегу одной из крупных рек Якутии. На какой реке они стоят?',
@@ -35,6 +46,8 @@ cities = {
 sessionStorage = {}
 
 
+
+
 # Задаем параметры приложения Flask.
 @app.route("/", methods=['POST'])
 def main():
@@ -58,6 +71,10 @@ def main():
         ensure_ascii=False,
         indent=2
     )
+
+
+
+
 
 # Главная ветка кода.
 def handle_dialog(res, req):
@@ -134,6 +151,10 @@ def handle_dialog(res, req):
             play_game(res, req)
 
 
+
+
+
+
 # Функция запуска игры.
 def play_game(res, req):
     user_id = req['session']['user_id']
@@ -185,12 +206,16 @@ def play_game(res, req):
                 # иначе показываем следующую картинку
                 res['response']['card'] = {}
                 res['response']['card']['type'] = 'BigImage'
-                res['response']['card']['title'] = f'Неправильно. {cities[city][0]}'
+                res['response']['card']['title'] = f'Ещё раз. {cities[city][0]}'
                 res['response']['card']['image_id'] = cities[city][1]
                 res['response']['text'] = 'А вот и не угадал!'
                 res['response']['buttons'] = get_suggests(user_id, cities[city][2])
     # увеличиваем номер попытки доля следующего шага
     sessionStorage[user_id]['attempt'] += 1
+
+
+
+
 
 
 # Функция возвращает город для ответа.
@@ -203,6 +228,10 @@ def get_city(req):
             return entity['value'].get('city', None)
 
 
+
+
+
+
 # Функция возвращает имя пользователя для ответа.
 def get_first_name(req):
     # перебираем сущности
@@ -212,6 +241,10 @@ def get_first_name(req):
             # Если есть сущность с ключом 'first_name', то возвращаем её значение.
             # Во всех остальных случаях возвращаем None.
             return entity['value'].get('first_name', None)
+
+
+
+
 
 
 # Функция возвращает подсказки для ответа.
@@ -233,6 +266,11 @@ def get_suggests(user_id, _suggest):
     return suggests
 
 
+
+
+
+
+
 # Функция возвращает подсказки для перехода по ссылке.
 def get_url_suggests(user_id, _suggest):
     # Открываем сессию пользователя
@@ -251,6 +289,11 @@ def get_url_suggests(user_id, _suggest):
 
     # Возвращаем подсказки
     return suggests
+
+
+
+
+
 
 # Запуск для дебага.
 # if __name__ == '__main__':
