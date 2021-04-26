@@ -176,7 +176,7 @@ def play_game(res, req):
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
         # проверяем есть ли правильный ответ в сообщение
-        if str(get_city(req)).lower() == city:
+        if str(get_city(req)).lower() == str(city).lower():
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
             # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
             res['response']['text'] = 'Правильно! Сыграем ещё?'
