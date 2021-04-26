@@ -92,7 +92,7 @@ def handle_dialog(res, req):
             if 'да' in req['request']['nlu']['tokens']:
                 # если пользователь согласен, то проверяем не отгадал ли он уже все города.
                 # По схеме можно увидеть, что здесь окажутся и пользователи, которые уже отгадывали города
-                if len(sessionStorage[user_id]['guessed_cities']) == 11:
+                if len(sessionStorage[user_id]['guessed_cities']) == len(cities):
                     # если все три города отгаданы, то заканчиваем игру
                     res['response']['text'] = 'Ты отгадал все города!'
                     res['end_session'] = True
@@ -137,10 +137,10 @@ def play_game(res, req):
         # добавляем в ответ картинку
         res['response']['card'] = {}
         res['response']['card']['type'] = 'BigImage'
-        res['response']['card']['title'] = cities[city][attempt - 1]
-        res['response']['card']['image_id'] = cities[city][attempt]
+        res['response']['card']['title'] = cities[city][0]
+        res['response']['card']['image_id'] = cities[city][1]
         res['response']['text'] = 'Тогда сыграем!'
-        res['response']['buttons'] = get_suggests(user_id, cities[city][attempt + 1])
+        res['response']['buttons'] = get_suggests(user_id, cities[city][2])
     else:
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
@@ -173,10 +173,10 @@ def play_game(res, req):
                 # иначе показываем следующую картинку
                 res['response']['card'] = {}
                 res['response']['card']['type'] = 'BigImage'
-                res['response']['card']['title'] = 'Неправильно. Вот тебе дополнительное фото'
-                res['response']['card']['image_id'] = cities[city][attempt - 1]
+                res['response']['card']['title'] = f'Неправильно. {cities[city][0]}'
+                res['response']['card']['image_id'] = cities[city][1]
                 res['response']['text'] = 'А вот и не угадал!'
-                res['response']['buttons'] = get_suggests(user_id, cities[city][attempt])
+                res['response']['buttons'] = get_suggests(user_id, cities[city][2])
     # увеличиваем номер попытки доля следующего шага
     sessionStorage[user_id]['attempt'] += 1
 
